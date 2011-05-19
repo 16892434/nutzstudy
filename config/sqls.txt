@@ -1,0 +1,9 @@
+/* 这里存放的是SQL语句 */
+/* select_person */
+select * from t_person
+/* del_person_by_id */
+delete from t_person where id = $id
+/* master.update */
+UPDATE t_master SET petId=@petId WHERE id=@masterId
+/* pet.update */
+UPDATE t_pet SET masterid=@masterId WHERE id=@petId;
