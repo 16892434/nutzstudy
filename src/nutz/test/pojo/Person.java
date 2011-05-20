@@ -16,6 +16,12 @@ public class Person {
 	private String name;
 	@Column
 	private int age;
+	
+	public Person() {}
+	public Person(String name) {
+		this.name = name;
+	}
+	
 	public int getId() {
 		return id;
 	}

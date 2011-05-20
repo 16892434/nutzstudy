@@ -9,11 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nutz.test.pojo.Master;
+import nutz.test.pojo.Pet;
 import nutz.util.DBUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
+import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
+import org.nutz.dao.entity.Entity;
 import org.nutz.dao.impl.FileSqlManager;
 import org.nutz.dao.impl.NutDao;
 import org.nutz.dao.sql.Sql;
@@ -25,7 +29,9 @@ public class SqlRun extends Run {
 		// testSqlInsert();
 		// testSqlCallBack();
 		// testSqlSelect();
-		testFromSqlFile();
+		// testFromSqlFile();
+		testEntityFetch();
+		testEntityQuery();
 	}
 	
 	/**
@@ -126,6 +132,76 @@ public class SqlRun extends Run {
 		
 		for(String name : sql.getList(String.class)) {
 			out.println(name);
+		}
+	}
+	
+	/**
+	 * 使用Entity<?>与内置的回调
+	 */
+	
+	/**
+	 * 通过自定义Condition
+	 */
+	public static void testEntity() throws Exception {
+		Sql sql = Sqls.create("UPDATE t_pet SET masterId = @masterId $condition");
+		Entity<Pet> entity = dao.getEntity(Pet.class);
+		sql.setEntity(entity).setCondition(new Condition() {
+			public String toSql(Entity<?> entity) {
+				return String.format("%s LIKE 'Y%'", entity.getField("name").getColumnName());
+			}
+		});
+		
+		dao.execute(sql);
+	}
+	
+	/**
+	 * 指定callback
+	 * 
+	 * 这种可以指定默认的callback有两种，所以最后可以通过：
+	 * 	sql.getObject(Class<?> clazz);
+	 * 	sql.getList(Class<?> clazz);
+	 * 来取结果集。
+	 * 
+	 * fetch	取一个对象
+	 * query	取一组对象（集合）
+	 * 
+	 */
+	public static void testDefaultEntity() throws Exception {
+		Sql sql = Sqls.create("SELECT * FROM t_pet $condition");
+		sql.setCallback(Sqls.callback.entities());
+		Entity<Pet> entity = dao.getEntity(Pet.class);
+		sql.setEntity(entity).setCondition(Cnd.wrap("id=15"));
+		dao.execute(sql);
+		// out.println(sql.getList(Pet.class));
+		out.println(sql.getObject(Pet.class));
+	}
+
+	/**
+	 * 使用内置callback来Fetch一个对象
+	 */
+	public static void testEntityFetch() throws Exception {
+		out.println("\n" + StringUtils.center("testEntityFetch", 80, "*"));
+		Sql sql = Sqls.fetchEntity("SELECT * FROM t_pet $condition");
+		Entity<Pet> entity = dao.getEntity(Pet.class);
+		sql.setEntity(entity).setCondition(Cnd.wrap("id=1"));
+		dao.execute(sql);
+		out.println(sql.getObject(Pet.class).getName());
+	}
+	
+	/**
+	 * 使用内置callback来Query一组对象
+	 */
+	public static void testEntityQuery() throws Exception {
+		out.println("\n" + StringUtils.center("testEntityQuery", 80, "*"));
+		Sql sql = Sqls.queryEntity("SELECT * FROM t_pet $condition");
+		Entity<Pet> entity = dao.getEntity(Pet.class);
+		sql.setEntity(entity).setCondition(Cnd.wrap("id>1"));
+		dao.execute(sql);
+		
+		List<Pet> list = sql.getList(Pet.class);
+		
+		for(Pet pet : list) {
+			out.println(pet.getName());
 		}
 	}
 }

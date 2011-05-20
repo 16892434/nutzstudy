@@ -1,17 +1,14 @@
 package nutz.test;
 
+import static java.lang.System.out;
+import nutz.iocstudy.BaseIoc;
 import nutz.test.pojo.Person;
 
-import org.nutz.ioc.Ioc;
-import org.nutz.ioc.impl.NutIoc;
-import org.nutz.ioc.loader.json.JsonLoader;
-
-public class IcoRun {
+public class IcoRun extends BaseIoc {
 
 	public static void main(String [] args) {
-		Ioc ioc = new NutIoc(new JsonLoader("ioc.js"));
-		Person p = ioc.get(Person.class, "ppp");
-		System.out.println(p.getName());
+		Person p = ioc.get(Person.class, "xiaobai");
+		out.println(p.getName());
 	}
 	
 }

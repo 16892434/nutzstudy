@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.4-bin.jar"/>
 	<classpathentry kind="lib" path="lib/c3p0-0.9.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/nutz-1.b.37-jdk6.jar" sourcepath="D:/project/nutz/nutz-1.b.37-sources.jar"/>
+	<classpathentry kind="lib" path="lib/nutz-1.b.37-jdk6.jar" sourcepath="E:/java/nutz-1.b.37/nutz-1.b.37-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-dbcp.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
